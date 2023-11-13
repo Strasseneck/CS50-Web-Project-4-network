@@ -2,4 +2,14 @@
 
 {% block body %}
     TODO
+    {% if user.is_authenticated %}
+    <button id="create-new-post">CREATE NEW POST</button>
+    <div id="new-post-form" class="mb-3">
+        <label for="post-content" class="form-label">New Post</label>
+        <textarea class="form-control" id="post-content" placeholder="Tell us what's on your mind..." rows="3"></textarea>
+        <button type="submit">Post</button>
+      </div>
+    ALLPOSTS
+    {% endif %}
 {% endblock %}
+

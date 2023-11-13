@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -8,8 +9,7 @@ from .models import User
 
 
 def index(request):
-    return render(request, "network/index.html")
-
+        return render(request, "network/index.html")
 
 def login_view(request):
     if request.method == "POST":
@@ -61,3 +61,11 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+@login_required
+def new_post(request):
+    return 1
+
+@login_required
+def following(request):
+    return 1
