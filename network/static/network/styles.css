@@ -3,6 +3,6 @@
 /* Index */
 
 #new-post-form {
-    visibility: hidden;
+    display: none;
 }
 
