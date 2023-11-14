@@ -1,15 +1,24 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO
-    {% if user.is_authenticated %}
-    <button id="create-new-post">CREATE NEW POST</button>
-    <div id="new-post-form" class="mb-3">
+   {% if user.is_authenticated %}
+    <form action="{% url 'new_post' %}" method="post" id="new-post-form" class="mb-3">
+        {% csrf_token %}
         <label for="post-content" class="form-label">New Post</label>
-        <textarea class="form-control" id="post-content" placeholder="Tell us what's on your mind..." rows="3"></textarea>
-        <button type="submit">Post</button>
-      </div>
-    ALLPOSTS
+        <input class="btn btn-primary btn-sm" id="close-button" type="button" value="X">
+        <textarea class="form-control" id="post-content" name="body" placeholder="Tell us what's on your mind..." rows="3"></textarea>
+        <input class="btn btn-primary" type="submit" value="Create Post">
+    </form>
     {% endif %}
+
+
+    {% for post in posts %}
+        <div class="post-container">
+            <strong class="post-user">{{ post.user }}</strong>
+            <p class="post-timestamp">{{ post.timestamp }}</p>
+            <p class="post-body">{{ post.body }}</p>
+            <p class="post-likes">{{ post.likes.count }}</p>
+        </div>
+    {% endfor %}
 {% endblock %}
 
