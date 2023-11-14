@@ -5,11 +5,22 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Post
 
 
 def index(request):
-        return render(request, "network/index.html")
+        
+        # Check if logged in
+        if request.user.is_authenticated:
+
+            # Get posts
+            posts = reversed(Post.objects.all())
+            return render(request, "network/index.html", {
+                "posts": posts
+            })
+
+        else:
+            return render(request, "network/index.html")
 
 def login_view(request):
     if request.method == "POST":
@@ -64,8 +75,19 @@ def register(request):
 
 @login_required
 def new_post(request):
-    return 1
+    
+    # Make sure it's POST
+    if request.method == 'POST':
 
+        # Get post data
+        body = request.POST["body"]
+        user = request.user
+
+        # Save post
+        post = Post(body=body, user=user)
+        post.save()
+        return HttpResponseRedirect(reverse("index"))
+        
 @login_required
 def following(request):
     return 1
