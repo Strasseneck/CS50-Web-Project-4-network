@@ -13,7 +13,7 @@ def index(request):
         # Check if logged in
         if request.user.is_authenticated:
 
-            # Get posts
+            # Get posts and render
             posts = reversed(Post.objects.all())
             return render(request, "network/index.html", {
                 "posts": posts
@@ -91,3 +91,22 @@ def new_post(request):
 @login_required
 def following(request):
     return 1
+
+@login_required
+def profile(request, username):
+
+    # Get user data
+    user = User.objects.get(username = username)
+
+    # Get user posts
+    posts = reversed(Post.objects.filter(user=user.id))
+
+    # Get follower count
+    followers = User.objects.filter(following=user.id).count()
+    
+    # Render template
+    return render(request, "network/profile.html", {
+        "user": user,
+        "posts": posts,
+        "followers": followers
+    })
