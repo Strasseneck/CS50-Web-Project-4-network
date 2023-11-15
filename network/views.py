@@ -46,7 +46,6 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
-
 def register(request):
     if request.method == "POST":
         username = request.POST["username"]
@@ -148,5 +147,26 @@ def unfollow(request):
         # Reload profile
         username = user_to_unfollow.username
         return HttpResponseRedirect(reverse("profile", args=(username,)))
+
+@login_required
+def following(request):
+        
+        # Check if logged in
+        if request.user.is_authenticated:
+
+            # Get current user
+            current_user = User.objects.get(id = request.user.id)
+
+            # Get users the user follows
+            followed_users = current_user.following.all()
+
+            # Get followed user posts
+            followed_posts = Post.objects.filter(user__in=followed_users)
+
+            return render(request, "network/following.html", {
+                "followed_users": followed_users,
+                "followed_posts": followed_posts
+            })
+
 
 

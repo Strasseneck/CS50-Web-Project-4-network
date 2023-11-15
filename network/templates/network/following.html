@@ -1,0 +1,12 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    {% for post in followed_posts %}
+    <div class="post-container">
+        <a class="nav-link active" id="user-profile" href="/profile/{{ post.user }}">{{ post.user }}</a>
+        <p class="post-timestamp">{{ post.timestamp }}</p>
+        <p class="post-body">{{ post.body }}</p>
+        <p class="post-likes">{{ post.likes.count }}</p>
+    </div>
+    {% endfor %}
+{% endblock %}
