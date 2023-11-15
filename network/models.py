@@ -3,10 +3,11 @@ from django.db import models
 
 
 class User(AbstractUser):
-    pass
+    following = models.ManyToManyField("self", symmetrical=False, blank=True,related_name="followers")
+
 
 class Post(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="posts")
     body = models.TextField(blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-    likes = models.ManyToManyField("User", related_name="liked_posts")
+    likes = models.ManyToManyField("User", blank=True, related_name="liked_posts")

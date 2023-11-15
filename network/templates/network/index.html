@@ -14,7 +14,7 @@
 
     {% for post in posts %}
         <div class="post-container">
-            <strong class="post-user">{{ post.user }}</strong>
+            <a class="nav-link active" id="user-profile" href="/profile/{{ post.user }}">{{ post.user }}</a>
             <p class="post-timestamp">{{ post.timestamp }}</p>
             <p class="post-body">{{ post.body }}</p>
             <p class="post-likes">{{ post.likes.count }}</p>

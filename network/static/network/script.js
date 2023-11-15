@@ -10,3 +10,4 @@ $('#create-new-post').on('click', function() {
 $('#close-button').on('click', function () {
     $('#new-post-form').attr("style", "display: none");
 })
+

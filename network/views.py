@@ -89,24 +89,64 @@ def new_post(request):
         return HttpResponseRedirect(reverse("index"))
         
 @login_required
-def following(request):
-    return 1
-
-@login_required
 def profile(request, username):
 
     # Get user data
-    user = User.objects.get(username = username)
+    user_profile = User.objects.get(username = username)
 
     # Get user posts
-    posts = reversed(Post.objects.filter(user=user.id))
+    posts = reversed(Post.objects.filter(user=user_profile.id))
 
-    # Get follower count
-    followers = User.objects.filter(following=user.id).count()
+    # Get current user
+    current_user = request.user
     
     # Render template
     return render(request, "network/profile.html", {
-        "user": user,
+        "user_profile": user_profile,
         "posts": posts,
-        "followers": followers
+        "current_user": current_user
     })
+
+@login_required
+def follow(request):
+    
+    # Make sure method is post
+    if request.method == 'POST':
+
+        # Get current user
+        current_user = request.user
+    
+        # Get user to follow 
+        user_to_follow_id = request.POST["userid"]
+        user_to_follow = User.objects.get(id = user_to_follow_id)
+
+        # Set user as follower and save
+        current_user.following.add(user_to_follow)
+        current_user.save()
+
+        # Reload profile
+        username = user_to_follow.username
+        return HttpResponseRedirect(reverse("profile", args=(username,)))
+
+@login_required
+def unfollow(request):
+
+    # Make sure method is post
+    if request.method == 'POST':
+
+        # Get current user
+        current_user = request.user
+
+        # Get user to unfollow 
+        user_to_unfollow_id = request.POST["userid"]
+        user_to_unfollow = User.objects.get(id = user_to_unfollow_id)
+
+        # Set user as follower and save
+        current_user.following.remove(user_to_unfollow)
+        current_user.save()
+
+        # Reload profile
+        username = user_to_unfollow.username
+        return HttpResponseRedirect(reverse("profile", args=(username,)))
+
+
