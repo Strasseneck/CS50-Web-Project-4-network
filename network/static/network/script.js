@@ -95,14 +95,28 @@ function savePost(postId) {
     let $editedPost = $(`#${postId}`);
 
     $editedPost.each(function () {
+        // Remove save post button
+        let $saveButton = $('#save-post-button');
+        if($saveButton.length !== 0) {
+            $saveButton.remove();
+        }
+        
         // Get the newbody content
-        let newBody = $(this).find('#new-body').val();
+        let $editedBody = $(this).find('#new-body');
+        let newBodyContent = $editedBody.val();
+
+        // Modify the DOM with new body
+        let savedBody = $('<p>');
+        savedBody.addClass('post-body');
+        savedBody.attr('id', 'post-body');
+        savedBody.text(newBodyContent);
+        $editedBody.replaceWith(savedBody);
 
         // Send via Fetch to view
         fetch('/edit_post', {
             method: 'POST', 
             body: JSON.stringify({
-                body: newBody,
+                body: newBodyContent,
                 postId: postId
             })
         })
