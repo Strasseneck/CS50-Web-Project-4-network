@@ -1,14 +1,30 @@
 // Variables 
 
 // Toggle Create New Post
-$('#create-new-post').on('click', function() {
-    console.log('here');
+
+function newPost() {
     $('#new-post-form').attr("style", "display: block");
+    $('#new-post-button').remove();
+}
+
+$('#new-post-button').on('click', function() {
+    newPost()
 })
 
 // Close new post button
 $('#close-button').on('click', function () {
     $('#new-post-form').attr("style", "display: none");
+    
+     // Add new post button
+     let $newPostButton = $('<button>');
+     $newPostButton.addClass('btn btn-primary');
+     $newPostButton.text('New Post')
+     $newPostButton.attr('type', 'button');
+     $newPostButton.attr('id', 'new-post-button');
+     $newPostButton.on('click', function() {
+         newPost()
+     });
+     $newPostButton.appendTo('#new-post');
 })
 
 // Editing posts
@@ -30,15 +46,15 @@ $('.post-container').on({
 
         if(currentUser === postAuthor) {
             // checks if author and creates button
-            let editButton = $('<input>');
-            editButton.addClass('btn btn-primary btn-sm');
-            editButton.attr('type', 'button');
-            editButton.attr('id', 'edit-post-button');
-            editButton.val('Edit Post');
-            editButton.on('click', function () {
+            let $editButton = $('<input>');
+            $editButton.addClass('btn btn-primary btn-sm');
+            $editButton.attr('type', 'button');
+            $editButton.attr('id', 'edit-post-button');
+            $editButton.val('Edit Post');
+            $editButton.on('click', function () {
                 editPost(postId)
             });
-            editButton.appendTo(`#button-container${postId}`)
+            $editButton.appendTo(`#button-container${postId}`)
         }
     },
     mouseleave: function () {
@@ -100,17 +116,17 @@ function savePost(postId) {
         if($saveButton.length !== 0) {
             $saveButton.remove();
         }
-        
+
         // Get the newbody content
         let $editedBody = $(this).find('#new-body');
         let newBodyContent = $editedBody.val();
 
         // Modify the DOM with new body
-        let savedBody = $('<p>');
-        savedBody.addClass('post-body');
-        savedBody.attr('id', 'post-body');
-        savedBody.text(newBodyContent);
-        $editedBody.replaceWith(savedBody);
+        let $savedBody = $('<p>');
+        $savedBody.addClass('post-body');
+        $savedBody.attr('id', 'post-body');
+        $savedBody.text(newBodyContent);
+        $editedBody.replaceWith($savedBody);
 
         // Send via Fetch to view
         fetch('/edit_post', {

@@ -2,15 +2,17 @@
 
 {% block body %}
    {% if user.is_authenticated %}
+   <div class="button-container" id="new-post">
+    <button type="button" class="btn btn-primary" id="new-post-button">New Post</button>
+   </div>
     <form action="{% url 'new_post' %}" method="post" id="new-post-form" class="mb-3">
         {% csrf_token %}
         <label for="post-content" class="form-label">New Post</label>
-        <input class="btn btn-primary btn-sm" id="close-button" type="button" value="X">
         <textarea class="form-control" id="post-content" name="body" placeholder="Tell us what's on your mind..." rows="3"></textarea>
         <input class="btn btn-primary" type="submit" value="Create Post">
+        <button type="button" id="close-button" class="btn btn-primary" >Close</button>
     </form>
     {% endif %}
-
 
     {% for post in page_obj %}
         <div id="{{ post.id }}" class="post-container">
@@ -24,20 +26,20 @@
         </div>
     {% endfor %}
 
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-            {% endif %}
-            <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-            </span>
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-            {% endif %}
+    <ul class="pagination">
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
         </span>
-    </div>
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a>
+            </li>
+            {% endif %}
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a>
+            </li>
+            {% endif %}
+    </ul>
 {% endblock %}
 
