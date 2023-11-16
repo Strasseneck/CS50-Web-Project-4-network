@@ -1,9 +1,11 @@
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import User, Post
 
@@ -173,6 +175,24 @@ def following(request):
             })
 
 @login_required
-def edit_post(request, postid):
-    return 1
+@csrf_exempt
+def edit_post(request):
+    # Make sure it's POST
+    if request.method != 'POST':
+        return JsonResponse({"error": "POST request required"}, status=400)
+    try:
+        data = json.loads(request.body)
+        # Get post data
+        postId = data.get("postId", "")
+        body = data.get("body", "")
+        
+        # Save post
+        post = Post.objects.get(id = postId)
+        post.body = body
+        post.save()
+        return JsonResponse({'message': 'Post succesfully edited.'},status=201)
+    except Exception as e:
+        # Handle an exception
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
 

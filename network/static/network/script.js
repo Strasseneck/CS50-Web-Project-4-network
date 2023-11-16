@@ -22,7 +22,6 @@ $('.post-container').on({
             // If exists return
             return;
         }
-
         // Get post, user data
         console.log('mouse enter');
         let postId = $(this).attr('id');
@@ -83,13 +82,34 @@ function editPost(postId) {
         $saveButton.attr('id', 'save-post-button')
         $saveButton.val('Save Post');
         $saveButton.on('click', function () {
-            savePost($post)
+            savePost(postId)
         });
         $editButton.replaceWith($saveButton);  
     })
 }
 
 // Save post function
-function savePost(post) {
+function savePost(postId) {
     console.log('Save Post');
+    // Get the edited post
+    let $editedPost = $(`#${postId}`);
+
+    $editedPost.each(function () {
+        // Get the newbody content
+        let newBody = $(this).find('#new-body').val();
+
+        // Send via Fetch to view
+        fetch('/edit_post', {
+            method: 'POST', 
+            body: JSON.stringify({
+                body: newBody,
+                postId: postId
+            })
+        })
+        .then(response => response.json())
+        .then(result => {
+            console.log(result)
+            console.log('message saved')
+        })
+    })
 }
