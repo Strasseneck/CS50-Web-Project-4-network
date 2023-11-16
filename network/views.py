@@ -12,11 +12,15 @@ def index(request):
         
         # Check if logged in
         if request.user.is_authenticated:
+            
+            # Get current user
+            current_user = request.user
 
             # Get posts and render
             posts = reversed(Post.objects.all())
             return render(request, "network/index.html", {
-                "posts": posts
+                "posts": posts,
+                "current_user": current_user
             })
 
         else:
@@ -168,5 +172,7 @@ def following(request):
                 "followed_posts": followed_posts
             })
 
-
+@login_required
+def edit_post(request, postid):
+    return 1
 

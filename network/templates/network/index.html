@@ -13,11 +13,15 @@
 
 
     {% for post in posts %}
-        <div class="post-container">
+        <div id="{{ post.id }}" class="post-container">
             <a class="nav-link active" id="user-profile" href="/profile/{{ post.user }}">{{ post.user }}</a>
             <p class="post-timestamp">{{ post.timestamp }}</p>
-            <p class="post-body">{{ post.body }}</p>
+            <p id="post-{{ forloop.counter }}" class="post-body">{{ post.body }}</p>
             <p class="post-likes">{{ post.likes.count }}</p>
+            {% if post.user == current_user %}
+                <div class="button-container" id="button-container{{ post.id }}"></div>
+                <input type="hidden" id="post-body-id" value="post-{{  forloop.counter }}"> 
+            {% endif %}
         </div>
     {% endfor %}
 {% endblock %}
