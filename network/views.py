@@ -1,4 +1,5 @@
 import json
+from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -19,9 +20,15 @@ def index(request):
             current_user = request.user
 
             # Get posts and render
-            posts = reversed(Post.objects.all())
+            posts = Post.objects.all().order_by('-timestamp')
+
+            # Pagination
+            paginator = Paginator(posts, 10) # 10 posts per page
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+
             return render(request, "network/index.html", {
-                "posts": posts,
+                "page_obj": page_obj,
                 "current_user": current_user
             })
 
@@ -46,7 +53,6 @@ def login_view(request):
             })
     else:
         return render(request, "network/login.html")
-
 
 def logout_view(request):
     logout(request)
@@ -167,10 +173,15 @@ def following(request):
             followed_users = current_user.following.all()
 
             # Get followed user posts
-            followed_posts = Post.objects.filter(user__in=followed_users)
+            followed_posts = Post.objects.filter(user__in=followed_users).order_by('-timestamp')
+
+             # Pagination
+            paginator = Paginator(followed_posts, 10) # 10 posts per page
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
 
             return render(request, "network/following.html", {
-                "followed_users": followed_users,
+                "page_obj": page_obj,
                 "followed_posts": followed_posts
             })
 
@@ -185,7 +196,7 @@ def edit_post(request):
         # Get post data
         postId = data.get("postId", "")
         body = data.get("body", "")
-        
+    
         # Save post
         post = Post.objects.get(id = postId)
         post.body = body
