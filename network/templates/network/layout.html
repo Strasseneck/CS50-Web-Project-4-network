@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>{% block title %}Social Network{% endblock %}</title>
+        <title hidden>{% block title %}Social Network{% endblock %}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link href="{% static 'network/styles.css' %}" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -42,13 +42,13 @@
             </div>
           </nav>
         
-        <div class="body">
+      
             {% block body %}
             {% endblock %}
             <!--js script-->
             {% block script %}
-            <script src="{% static 'network/script.js' %}"></script>
+            <script src="{% static 'network/script.js' %}" defer></script>
             {% endblock %}
-        </div>
+       
     </body>
 </html>

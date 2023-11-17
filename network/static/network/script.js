@@ -33,7 +33,7 @@ $('.post-container').on({
         }
         // Get post, user data
         let postId = $(this).attr('id');
-        let postAuthor = $(this).find('.user-profile').text();
+        let postAuthor = $(this).find('.post-username').text();
         let currentUser = $('#current-user-username').text();
 
         if(currentUser === postAuthor) {
@@ -52,13 +52,13 @@ $('.post-container').on({
 
 // Like post button
 $('.like-post-button').on('click', function() {
-    let postId = $(this).parent().attr('id');
+    let postId = $(this).closest('.post-container').attr('id');
     likePost(postId);   
 })
 
 // Unlike button event listener
 $('.unlike-post-button').on('click', function() {
-    let postId = $(this).parent().attr('id');
+    let postId = $(this).closest('.post-container').attr('id');
     unlikePost(postId);
 })
 
@@ -72,6 +72,7 @@ function newPost() {
 
 // Create edit button function
 function createEditButton(postId) {
+    console.log('Create edit button')
     let $editButton = $('<input>');
     $editButton.addClass('btn btn-primary btn-sm');
     $editButton.attr('type', 'button');
@@ -245,6 +246,7 @@ function updateLikes(postId, val) {
 
         // Convert back to string
         newLikes = newLikes.toString();
+        newLikes += ' Likes';
 
         // Update the DOM with new likes
         $currentLikes.text(newLikes);       

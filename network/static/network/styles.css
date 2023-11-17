@@ -1,9 +1,106 @@
 /* General Layout */
+* {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    flex-direction:column;
+    height: 100%;
+    width: -webkit-fill-available;
+}
+
+.navbar {
+    width: -webkit-fill-available;
+}
 
 /* Index */
-
 #new-post-form {
     display: none;
 }
 
-/* Posts */
+.post-container {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    align-self: center;
+    padding: 15px;
+    border-bottom: solid 0.5px black;
+}
+
+/* Individual Posts */
+.button-container {
+    align-items: flex-start;
+    flex-direction: row;
+    align-self: flex-end;
+}
+
+.user-profile {
+    padding: 0;
+}
+
+.user-header {
+    flex-direction: column;
+    margin: 0.5vw;
+}
+
+.post-body {
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.post-header {
+    display: flex;
+    flex-direction: row;
+   
+}
+    
+.post-username {
+    font-size:larger;
+}
+
+.post-timestamp {
+    text-align: end;
+    font-size: 0.9em;
+    color:rgb(3, 111, 234);
+}
+
+#save-post-button {
+    margin: 0.5vw;
+}
+
+#new-post-button {
+    margin:0.5vw;
+}
+
+#new-post-form {
+    width: 80%;
+}
+
+.like-post-button { 
+    border: none;
+    margin: 1vw;
+}
+
+.unlike-post-button {
+    border: none;
+    margin: 1vw;
+}
+
+.like-post-button :active { 
+    outline: none;
+}
+
+.unlike-post-button :active {
+     outline: none;
+}
+.icon {
+    width:20px;
+    height:20px;
+}
