@@ -1,233 +1,262 @@
+// INITIAL EVENT LISTENERS
 
-// New post button event listener
-$('#new-post-button').on('click', function() {
-    newPost()
-})
-
-// New post function
-function newPost() {
-    $('#new-post-form').attr("style", "display: block");
-    $('#new-post-button').remove();
-}
-
-// Close new post button
-$('#close-button').on('click', function () {
-    $('#new-post-form').attr("style", "display: none");
-    
-     // Add new post button
-     let $newPostButton = $('<button>');
-     $newPostButton.addClass('btn btn-primary');
-     $newPostButton.text('New Post')
-     $newPostButton.attr('type', 'button');
-     $newPostButton.attr('id', 'new-post-button');
-     $newPostButton.on('click', function() {
-         newPost()
-     });
-     $newPostButton.appendTo('#new-post');
-})
-
-// Show Edit Post Button on hover
-$('.post-container').on({
-    mouseenter: function () {
-        // Check if savebutton exists
-        let $saveButton = $('#save-post-button');
-        if($saveButton.length !== 0) {
-            // If exists return
-            return;
-        }
-        // Get post, user data
-        let postId = $(this).attr('id');
-        let postAuthor = $(this).find('#user-profile').text();
-        let currentUser = $('#current-user-username').text();
-
-        if(currentUser === postAuthor) {
-            // checks if author and creates button
-            let $editButton = $('<input>');
-            $editButton.addClass('btn btn-primary btn-sm');
-            $editButton.attr('type', 'button');
-            $editButton.attr('id', 'edit-post-button');
-            $editButton.val('Edit Post');
-            $editButton.on('click', function () {
-                editPost(postId)
-            });
-            $editButton.appendTo(`#button-container${postId}`)
-        }
-    },
-    mouseleave: function () {
-        // Removes button if exists
-        let $editButton = $('#edit-post-button');
-        if($editButton.length !== 0) {
-            $editButton.remove();
-        }
-    }
-});
-
-// Edit post function
-function editPost(postId) {
-    console.log('edit post clicked')
-    // Get the post to edit
-    let $post = $(`#${postId}`);
-
-    $post.each(function() {
-        // Get the post body
-        let $postBody = $(this).find('#post-body');
-        let postBodyText = $postBody.text();
-        console.log(postBodyText);
-
-        // Create post body text area and populate with content
-        let $editableBody = $('<textarea>');
-        $editableBody.addClass('form-control');
-        $editableBody.attr("id", 'new-body');
-        $editableBody.val(postBodyText);
-
-        // Replace the original body with the new editable body
-        $postBody.replaceWith($editableBody);
-
-        // Get edit button
-        let $editButton = $(this).find('#edit-post-button');
-
-        // Replace edit post button with save post button
-        let $saveButton = $('<input>');
-        $saveButton.addClass('btn btn-primary btn-sm');
-        $saveButton.attr('type', 'button');
-        $saveButton.attr('id', 'save-post-button')
-        $saveButton.val('Save Post');
-        $saveButton.on('click', function () {
-            savePost(postId)
-        });
-        $editButton.replaceWith($saveButton);  
+    // New post button 
+    $('#new-post-button').on('click', function() {
+        newPost()
     })
-}
 
-// Save post function
-function savePost(postId) {
-    console.log('Save Post');
-    // Get the edited post
-    let $editedPost = $(`#${postId}`);
+     // Close new post button
+     $('#close-button').on('click', function () {
+        $('#new-post-form').attr("style", "display: none");
+        
+        // Add new post button
+        let $newPostButton = $('<button>');
+        $newPostButton.addClass('btn btn-primary');
+        $newPostButton.text('New Post')
+        $newPostButton.attr('type', 'button');
+        $newPostButton.attr('id', 'new-post-button');
+        $newPostButton.on('click', function() {
+            newPost()
+        });
+        $newPostButton.appendTo('#new-post');
+    })
 
-    $editedPost.each(function () {
-        // Remove save post button
-        let $saveButton = $('#save-post-button');
-        if($saveButton.length !== 0) {
-            $saveButton.remove();
+    // Show Edit Post Button on hover
+    $('.post-container').on({
+        mouseenter: function () {
+            // Check if savebutton exists
+            let $saveButton = $('#save-post-button');
+            if($saveButton.length !== 0) {
+                // If exists return
+                return;
+            }
+            // Get post, user data
+            let postId = $(this).attr('id');
+            let postAuthor = $(this).find('#user-profile').text();
+            let currentUser = $('#current-user-username').text();
+
+            if(currentUser === postAuthor) {
+                // checks if author and creates button
+                let $editButton = $('<input>');
+                $editButton.addClass('btn btn-primary btn-sm');
+                $editButton.attr('type', 'button');
+                $editButton.attr('id', 'edit-post-button');
+                $editButton.val('Edit Post');
+                $editButton.on('click', function () {
+                    editPost(postId)
+                });
+                $editButton.appendTo(`#button-container${postId}`)
+            }
+        },
+        mouseleave: function () {
+            // Removes button if exists
+            let $editButton = $('#edit-post-button');
+            if($editButton.length !== 0) {
+                $editButton.remove();
+            }
         }
+    });
 
-        // Get the newbody content
-        let $editedBody = $(this).find('#new-body');
-        let newBodyContent = $editedBody.val();
+    // Like post button
+    $('.like-post-button').on('click', function() {
+        let postId = $(this).parent().attr('id');
+    likePost(postId);   
+    })
 
-        // Modify the DOM with new body
-        let $savedBody = $('<p>');
-        $savedBody.addClass('post-body');
-        $savedBody.attr('id', 'post-body');
-        $savedBody.text(newBodyContent);
-        $editedBody.replaceWith($savedBody);
+    // Unlike button event listener
+    $('.unlike-post-button').on('click', function() {
+        let postId = $(this).parent().attr('id');
+        unlikePost(postId);
+    })
+
+// ELEMENTS FOR DOM MANIPULATION
+
+    // New like button
+    const $newLikeButton = $('<button>')
+    .addClass('btn btn-primary btn-sm like-post-button')
+    .text('Like');
+
+    // New unlike button
+    const $newUnlikeButton = $('<button>')
+    .addClass('btn btn-primary btn-sm unlike-post-button')
+    .text('Unlike');
+
+// FUNCTIONS
+
+    // New post function
+    function newPost() {
+        $('#new-post-form').attr("style", "display: block");
+        $('#new-post-button').remove();
+    }
+
+    // Edit post function
+    function editPost(postId) {
+        console.log('edit post clicked')
+        // Get the post to edit
+        let $post = $(`#${postId}`);
+
+        $post.each(function() {
+            // Get the post body
+            let $postBody = $(this).find('#post-body');
+            let postBodyText = $postBody.text();
+            console.log(postBodyText);
+
+            // Create post body text area and populate with content
+            let $editableBody = $('<textarea>');
+            $editableBody.addClass('form-control');
+            $editableBody.attr("id", 'new-body');
+            $editableBody.val(postBodyText);
+
+            // Replace the original body with the new editable body
+            $postBody.replaceWith($editableBody);
+
+            // Get edit button
+            let $editButton = $(this).find('#edit-post-button');
+
+            // Replace edit post button with save post button
+            let $saveButton = $('<input>');
+            $saveButton.addClass('btn btn-primary btn-sm');
+            $saveButton.attr('type', 'button');
+            $saveButton.attr('id', 'save-post-button')
+            $saveButton.val('Save Post');
+            $saveButton.on('click', function () {
+                savePost(postId)
+            });
+            $editButton.replaceWith($saveButton);  
+        })
+    }
+
+    // Save post function
+    function savePost(postId) {
+        console.log('Save Post');
+        // Get the edited post
+        let $editedPost = $(`#${postId}`);
+
+        $editedPost.each(function () {
+            // Remove save post button
+            let $saveButton = $('#save-post-button');
+            if($saveButton.length !== 0) {
+                $saveButton.remove();
+            }
+
+            // Get the newbody content
+            let $editedBody = $(this).find('#new-body');
+            let newBodyContent = $editedBody.val();
+
+            // Modify the DOM with new body
+            let $savedBody = $('<p>');
+            $savedBody.addClass('post-body');
+            $savedBody.attr('id', 'post-body');
+            $savedBody.text(newBodyContent);
+            $editedBody.replaceWith($savedBody);
+
+            // Send via Fetch to view
+            fetch('/edit_post', {
+                method: 'POST', 
+                body: JSON.stringify({
+                    body: newBodyContent,
+                    postId: postId
+                })
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                console.log('message saved')
+            })
+        })
+    }
+
+    // Like post function
+    function likePost(postId) {
+        console.log(`like post ${ postId }`);
+        const val = '++';
 
         // Send via Fetch to view
-        fetch('/edit_post', {
+        fetch('/like_post', {
             method: 'POST', 
             body: JSON.stringify({
-                body: newBodyContent,
                 postId: postId
             })
         })
         .then(response => response.json())
         .then(result => {
-            console.log(result)
-            console.log('message saved')
+            console.log(result);
+            console.log('post liked');
+            
+            // Toggle button class
+            let $button = $(`#${postId}`).find('.like-post-button');
+            $button.replaceWith($newUnlikeButton);
+            attachEventHandlers(postId);
+            updateLikes(postId, val);
+        })  
+    }
+
+    // Unlike post function
+    function unlikePost(postId) {
+        console.log(`unlike post ${ postId }`);
+        const val = '--';
+
+        // Send via Fetch to view
+        fetch('/unlike_post', {
+            method: 'POST', 
+            body: JSON.stringify({
+                postId: postId
+            })
         })
-    })
-}
-
-// Like post button event listener
-$('.like-post-button').on('click', function() {
-     let postId = $(this).parent().attr('id');
-    likePost(postId);   
-})
-
-// Like post function
-function likePost(postId) {
-    console.log(`like post ${ postId }`);
-    const val = '++';
-
-    // Toggle button class
-    let $button = $(`#${postId}`).find('.like-post-button');
-    $button.removeClass('like-post-button').addClass('unlike-post-button');
-    $button.text('Unlike');
-
-    // Send via Fetch to view
-    fetch('/like_post', {
-        method: 'POST', 
-        body: JSON.stringify({
-            postId: postId
+        .then(response => response.json())
+        .then(result => {
+            console.log(result);
+            console.log('post unliked');
+            
+            // Toggle button class
+            let $button = $(`#${postId}`).find('.unlike-post-button');
+            $button.replaceWith($newLikeButton);
+            attachEventHandlers(postId);
+            updateLikes(postId, val);
         })
-    })
-    .then(response => response.json())
-    .then(result => {
-        console.log(result)
-        console.log('post liked')
-    })
-    updateLikes(postId, val);
-}
-
-// Unlike post button event listener
-$('.unlike-post-button').on('click', function() {
-    let postId = $(this).parent().attr('id');
-    unlikePost(postId);
-})
-
-// Unlike post function
-function unlikePost(postId) {
-    console.log(`unlike post ${ postId }`);
-    const val = '--';
-
-    // Toggle button class
-    let $button = $(`#${postId}`).find('.unlike-post-button');
-    $button.removeClass('unlike-post-button').addClass('like-post-button');
-    $button.text('Like');
- 
-    // Send via Fetch to view
-    fetch('/unlike_post', {
-        method: 'POST', 
-        body: JSON.stringify({
-            postId: postId
-        })
-    })
-    .then(response => response.json())
-    .then(result => {
-        console.log(result)
-        console.log('post unliked')
-    })
-    updateLikes(postId, val);
-}
-
-// Update likes function
-function updateLikes(postId, val) {
-    // Get the post to update
-    let $post = $(`#${postId}`);
-
-    $post.each(function () {
-        // Get current likes
-        let $currentLikes = $(this).find('#post-likes');
-        let newLikes = parseInt($currentLikes.text());
         
-        // Check val and increment
-        if(val === '++') {
-            newLikes++;
-        }
-        else if(val === '--') {
-            newLikes--;
-        }
+    }
 
-        // Return if it's less than zero
-        if(newLikes < 0) {
-            return;
-        }
+    // Update likes function
+    function updateLikes(postId, val) {
+        // Get the post to update
+        let $post = $(`#${postId}`);
 
-        // Convert back to string
-        newLikes = newLikes.toString();
+        $post.each(function () {
+            // Get current likes
+            let $currentLikes = $(this).find('#post-likes');
+            let newLikes = parseInt($currentLikes.text());
+            
+            // Check val and increment
+            if(val === '++') {
+                newLikes++;
+            }
+            else if(val === '--') {
+                newLikes--;
+            }
 
-        // Update the DOM with new likes
-        $currentLikes.text(newLikes);
-    })  
-}
+            // Return if it's less than zero
+            if(newLikes < 0) {
+                return;
+            }
+
+            // Convert back to string
+            newLikes = newLikes.toString();
+
+            // Update the DOM with new likes
+            $currentLikes.text(newLikes);
+        })  
+    }
+
+    // Attach event handlers function
+    function attachEventHandlers(postId) {
+        // Like button
+        $(`#${postId}`).find('.like-post-button').on('click', function() {
+            likePost(postId);   
+        });
+        
+        // Unlike button
+        $(`#${postId}`).find('.unlike-post-button').on('click', function() {
+            unlikePost(postId);
+        });
+    }
