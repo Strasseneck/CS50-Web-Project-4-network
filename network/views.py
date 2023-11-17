@@ -19,6 +19,9 @@ def index(request):
             # Get current user
             current_user = request.user
 
+            # Get current_user likes
+            current_user_likes = Post.objects.filter(likes = current_user)
+
             # Get posts and render
             posts = Post.objects.all().order_by('-timestamp')
 
@@ -29,7 +32,8 @@ def index(request):
 
             return render(request, "network/index.html", {
                 "page_obj": page_obj,
-                "current_user": current_user
+                "current_user": current_user,
+                "current_user_likes": current_user_likes
             })
 
         else:
@@ -110,12 +114,16 @@ def profile(request, username):
 
     # Get current user
     current_user = request.user
+
+    # Get current_user likes
+    current_user_likes = Post.objects.filter(likes = current_user)
     
     # Render template
     return render(request, "network/profile.html", {
         "user_profile": user_profile,
         "posts": posts,
-        "current_user": current_user
+        "current_user": current_user,
+        "current_user_likes": current_user_likes
     })
 
 @login_required

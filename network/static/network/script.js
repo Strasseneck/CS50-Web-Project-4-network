@@ -1,5 +1,4 @@
 
-
 // New post button event listener
 $('#new-post-button').on('click', function() {
     newPost()
@@ -37,7 +36,6 @@ $('.post-container').on({
             return;
         }
         // Get post, user data
-        console.log('mouse enter');
         let postId = $(this).attr('id');
         let postAuthor = $(this).find('#user-profile').text();
         let currentUser = $('#current-user-username').text();
@@ -57,7 +55,6 @@ $('.post-container').on({
     },
     mouseleave: function () {
         // Removes button if exists
-        console.log('mouse leave');
         let $editButton = $('#edit-post-button');
         if($editButton.length !== 0) {
             $editButton.remove();
@@ -143,9 +140,9 @@ function savePost(postId) {
 }
 
 // Like post button event listener
-$('#like-post-button').on('click', function() {
-    let postId = $(this).parent().attr('id');
-    likePost(postId);
+$('.like-post-button').on('click', function() {
+     let postId = $(this).parent().attr('id');
+    likePost(postId);   
 })
 
 // Like post function
@@ -153,9 +150,10 @@ function likePost(postId) {
     console.log(`like post ${ postId }`);
     const val = '++';
 
-    // Replace like button with unlike
-    $('#like-post-button').attr("style", "display: none");
-    $('#unlike-post-button').attr("style", "display: block");
+    // Toggle button class
+    let $button = $(`#${postId}`).find('.like-post-button');
+    $button.removeClass('like-post-button').addClass('unlike-post-button');
+    $button.text('Unlike');
 
     // Send via Fetch to view
     fetch('/like_post', {
@@ -173,7 +171,7 @@ function likePost(postId) {
 }
 
 // Unlike post button event listener
-$('#unlike-post-button').on('click', function() {
+$('.unlike-post-button').on('click', function() {
     let postId = $(this).parent().attr('id');
     unlikePost(postId);
 })
@@ -183,10 +181,11 @@ function unlikePost(postId) {
     console.log(`unlike post ${ postId }`);
     const val = '--';
 
-    // Replace unlike button with like
-    $('#unlike-post-button').attr("style", "display: none");
-    $('#like-post-button').attr("style", "display: block");
-
+    // Toggle button class
+    let $button = $(`#${postId}`).find('.unlike-post-button');
+    $button.removeClass('unlike-post-button').addClass('like-post-button');
+    $button.text('Like');
+ 
     // Send via Fetch to view
     fetch('/unlike_post', {
         method: 'POST', 
@@ -220,12 +219,15 @@ function updateLikes(postId, val) {
             newLikes--;
         }
 
+        // Return if it's less than zero
+        if(newLikes < 0) {
+            return;
+        }
+
         // Convert back to string
         newLikes = newLikes.toString();
 
         // Update the DOM with new likes
         $currentLikes.text(newLikes);
-    })
-
-   
+    })  
 }
