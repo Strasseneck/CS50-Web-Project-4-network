@@ -32,7 +32,6 @@ $('.post-container').on({
             return;
         }
         // Get post, user data
-        console.log('mouse enter');
         let postId = $(this).attr('id');
         let postAuthor = $(this).find('.user-profile').text();
         let currentUser = $('#current-user-username').text();
@@ -44,7 +43,6 @@ $('.post-container').on({
     },
     mouseleave: function () {
         // Removes button if exists
-        console.log('mouse leave');
         let $editButton = $('#edit-post-button');
         if($editButton.length !== 0) {
             $editButton.remove();
@@ -174,11 +172,22 @@ function likePost(postId) {
             postId: postId
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (response.status !== 403) {
+            return response.json();
+        } else {
+            console.log('You can only like a post once!');
+            throw new Error('Forbidden');
+        }
+    })
     .then(result => {
-        console.log(result); 
+        console.log(result);
         updateLikes(postId, val);
-    })  
+    })
+    .catch(error => {
+        // Handle other errors
+        console.error('Error:', error);
+    }); 
 }
 
 // Unlike post function
@@ -193,11 +202,22 @@ function unlikePost(postId) {
             postId: postId
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (response.status !== 403) {
+            return response.json();
+        } else {
+            console.log('You can\'t unlike a post you don\'t like!');
+            throw new Error('Forbidden');
+        }
+    })
     .then(result => {
         console.log(result);
         updateLikes(postId, val);
-    })        
+    })
+    .catch(error => {
+        // Handle other errors
+        console.error('Error:', error);
+    });        
 }
 
 // Update likes function

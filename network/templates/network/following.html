@@ -2,11 +2,13 @@
 
 {% block body %}
     {% for post in page_obj %}
-    <div class="post-container">
+    <div id="{{ post.id }}" class="post-container">
         <a class="nav-link active" id="user-profile" href="/profile/{{ post.user }}">{{ post.user }}</a>
         <p class="post-timestamp">{{ post.timestamp }}</p>
         <p class="post-body">{{ post.body }}</p>
-        <p class="post-likes">{{ post.likes.count }}</p>
+        <p id="post-likes" class="post-likes">{{ post.likes.count }}</p>
+        <button type="button" class="btn btn-primary btn-sm unlike-post-button">Unlike</button>  
+        <button type="button" class="btn btn-primary btn-sm like-post-button">Like</button>        
     </div>
     {% endfor %}
     <ul class="pagination">
