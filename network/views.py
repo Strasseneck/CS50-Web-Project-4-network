@@ -220,19 +220,26 @@ def like_post(request):
     # Make sure it's POST
     if request.method != 'POST':
         return JsonResponse({"error": "POST request required"}, status=400)
+    
     try:
         data = json.loads(request.body)
         # Get postId
         postId = data.get("postId", "")
 
-        # Get current_user
+        # Check if user has already liked post
         current_user = request.user
+        user_likes = Post.objects.filter(likes = current_user)
+        check = user_likes.filter(id = postId).exists()
+
+        # If user has
+        if check == True:
+            return JsonResponse({'message': f'User has already liked post {postId}.'},status=403)
 
         # Update and save post
         post = Post.objects.get(id = postId)
         post.likes.add(current_user)
         post.save()
-        return JsonResponse({'message': 'Post succesfully liked.'},status=201)
+        return JsonResponse({'message': f'Post {postId} succesfully liked.'},status=201)
     except Exception as e:
         # Handle an exception
         return JsonResponse({'status': 'error', 'message': str(e)})
@@ -240,7 +247,7 @@ def like_post(request):
 @login_required
 @csrf_exempt
 def unlike_post(request):
-     # Make sure it's POST
+    # Make sure it's POST
     if request.method != 'POST':
         return JsonResponse({"error": "POST request required"}, status=400)
     
@@ -249,14 +256,20 @@ def unlike_post(request):
         # Get postId
         postId = data.get("postId", "")
 
-        # Get current_user
+        # Check if user has already liked post
         current_user = request.user
+        user_likes = Post.objects.filter(likes = current_user)
+        check = user_likes.filter(id = postId).exists()
 
+        # If user has
+        if check != True:
+            return JsonResponse({'message': f'User cannot unlike post {postId}.'},status=403)
+    
         # Update and save post
         post = Post.objects.get(id = postId)
         post.likes.remove(current_user)
         post.save()
-        return JsonResponse({'message': 'Post succesfully unliked.'},status=201)
+        return JsonResponse({'message': f'Post {postId} succesfully unliked.'},status=201)
     except Exception as e:
         # Handle an exception
         return JsonResponse({'status': 'error', 'message': str(e)})
