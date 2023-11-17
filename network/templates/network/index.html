@@ -23,11 +23,10 @@
             {% endif %}
             <p id="post-body" class="post-body">{{ post.body }}</p>
             <p id="post-likes" class="post-likes">{{ post.likes.count }}</p>
-            {% if post in current_user_likes %}
-                <button type="button" class="btn btn-primary btn-sm unlike-post-button">Unlike</button>  
-            {% else %}
-                <button type="button" class="btn btn-primary btn-sm like-post-button">Like</button>        
-            {% endif %}
+            <div class="empty-button-container"></div>
+            <button type="button" class="btn btn-primary btn-sm unlike-post-button">Unlike</button>  
+            <button type="button" class="btn btn-primary btn-sm like-post-button">Like</button>        
+
             </div>
     {% endfor %}
 
