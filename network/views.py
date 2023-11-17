@@ -206,4 +206,49 @@ def edit_post(request):
         # Handle an exception
         return JsonResponse({'status': 'error', 'message': str(e)})
 
+@login_required
+@csrf_exempt
+def like_post(request):
+    # Make sure it's POST
+    if request.method != 'POST':
+        return JsonResponse({"error": "POST request required"}, status=400)
+    try:
+        data = json.loads(request.body)
+        # Get postId
+        postId = data.get("postId", "")
 
+        # Get current_user
+        current_user = request.user
+
+        # Update and save post
+        post = Post.objects.get(id = postId)
+        post.likes.add(current_user)
+        post.save()
+        return JsonResponse({'message': 'Post succesfully liked.'},status=201)
+    except Exception as e:
+        # Handle an exception
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+@login_required
+@csrf_exempt
+def unlike_post(request):
+     # Make sure it's POST
+    if request.method != 'POST':
+        return JsonResponse({"error": "POST request required"}, status=400)
+    
+    try:
+        data = json.loads(request.body)
+        # Get postId
+        postId = data.get("postId", "")
+
+        # Get current_user
+        current_user = request.user
+
+        # Update and save post
+        post = Post.objects.get(id = postId)
+        post.likes.remove(current_user)
+        post.save()
+        return JsonResponse({'message': 'Post succesfully unliked.'},status=201)
+    except Exception as e:
+        # Handle an exception
+        return JsonResponse({'status': 'error', 'message': str(e)})

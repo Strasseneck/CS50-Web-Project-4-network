@@ -18,11 +18,13 @@
         <div id="{{ post.id }}" class="post-container">
             <a class="nav-link active" id="user-profile" href="/profile/{{ post.user }}">{{ post.user }}</a>
             <p class="post-timestamp">{{ post.timestamp }}</p>
-            <p id="post-body" class="post-body">{{ post.body }}</p>
-            <p class="post-likes">{{ post.likes.count }}</p> 
             {% if post.user == current_user %}
                 <div class="button-container" id="button-container{{ post.id }}"></div>
             {% endif %}
+            <p id="post-body" class="post-body">{{ post.body }}</p>
+            <p id="post-likes" class="post-likes">{{ post.likes.count }}</p>
+            <button type="button" id="like-post-button" class="btn btn-primary btn-sm">Like</button>
+            <button type="button" id="unlike-post-button" class="btn btn-primary btn-sm">Unlike</button>
         </div>
     {% endfor %}
 
