@@ -1,14 +1,34 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
     {% for post in page_obj %}
     <div id="{{ post.id }}" class="post-container">
-        <a class="nav-link active" id="user-profile" href="/profile/{{ post.user }}">{{ post.user }}</a>
+        <div class="post-header">
+            <div class="user-header">
+                <strong class="post-username">{{ post.user }}</strong>
+            <a class="nav-link active user-profile" href="/profile/{{ post.user }}">@{{ post.user }}</a>
+            </div>
+            {% if post.user == current_user %}
+                    <div class="button-container" id="button-container{{ post.id }}"></div>
+                {% endif %} 
+        </div>
+        <p id="post-body" class="post-body">{{ post.body }}   
+        </p>
+        <p id="post-likes" class="post-likes">{{ post.likes.count }} Likes</p>
         <p class="post-timestamp">{{ post.timestamp }}</p>
-        <p class="post-body">{{ post.body }}</p>
-        <p id="post-likes" class="post-likes">{{ post.likes.count }}</p>
-        <button type="button" class="btn btn-primary btn-sm unlike-post-button">Unlike</button>  
-        <button type="button" class="btn btn-primary btn-sm like-post-button">Like</button>        
+        <div class="button-container">
+            <div class="individual-button">
+                <button class="unlike-post-button">
+                    <img class="icon" src="{% static 'network/unlike.png' %}">
+                </button> 
+            </div>
+            <div class="individual-button">
+                <button type="button" class="like-post-button">
+                    <img class="icon" src="{% static 'network/like.png' %}">
+                </button>
+            </div>                 
+         </div>
     </div>
     {% endfor %}
     <ul class="pagination">

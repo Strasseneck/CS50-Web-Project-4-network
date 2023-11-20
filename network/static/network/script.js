@@ -100,7 +100,7 @@ function editPost(postId) {
 
     $post.each(function() {
         // Get the post body
-        let $postBody = $(this).find('#post-body');
+        let $postBody = $(this).find('.post-body');
         let postBodyText = $postBody.text();
         console.log(postBodyText);
 
@@ -149,7 +149,6 @@ function savePost(postId) {
         // Modify the DOM with new body
         let $savedBody = $('<p>');
         $savedBody.addClass('post-body');
-        $savedBody.attr('id', 'post-body');
         $savedBody.text(newBodyContent);
         $editedBody.replaceWith($savedBody);
 
@@ -236,7 +235,7 @@ function updateLikes(postId, val) {
 
     $post.each(function () {
         // Get current likes
-        let $currentLikes = $(this).find('#post-likes');
+        let $currentLikes = $(this).find('.post-likes');
         let newLikes = parseInt($currentLikes.text());
         
         // Check val and increment

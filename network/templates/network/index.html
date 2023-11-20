@@ -3,7 +3,7 @@
 
 {% block body %}
    {% if user.is_authenticated %}
-   <div class="button-container" id="new-post">
+   <div class="button-container-new-post" id="new-post">
     <button type="button" class="btn btn-primary" id="new-post-button">New Post</button>
    </div>
     <form action="{% url 'new_post' %}" method="post" id="new-post-form" class="mb-3">
@@ -28,7 +28,7 @@
             </div>
             <p id="post-body" class="post-body">{{ post.body }}   
             </p>
-            <p id="post-likes" class="post-likes">{{ post.likes.count }} Likes</p>
+            <p class="post-likes">{{ post.likes.count }} Likes</p>
             <p class="post-timestamp">{{ post.timestamp }}</p>
             <div class="button-container">
                 <div class="individual-button">
@@ -51,12 +51,16 @@
         </span>
             {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
             </li>
             {% endif %}
             {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
             </li>
             {% endif %}
     </ul>

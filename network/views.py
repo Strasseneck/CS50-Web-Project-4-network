@@ -110,18 +110,23 @@ def profile(request, username):
     user_profile = User.objects.get(username = username)
 
     # Get user posts
-    posts = reversed(Post.objects.filter(user=user_profile.id))
+    posts = Post.objects.filter(user=user_profile.id).order_by('-timestamp')
 
     # Get current user
     current_user = request.user
 
     # Get current_user likes
     current_user_likes = Post.objects.filter(likes = current_user)
+
+    # Pagination
+    paginator = Paginator(posts, 10) # 10 posts per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     
     # Render template
     return render(request, "network/profile.html", {
         "user_profile": user_profile,
-        "posts": posts,
+        "page_obj": page_obj,
         "current_user": current_user,
         "current_user_likes": current_user_likes
     })
