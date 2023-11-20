@@ -53,13 +53,21 @@ $('.post-container').on({
 // Like post button
 $('.like-post-button').on('click', function() {
     let postId = $(this).closest('.post-container').attr('id');
-    likePost(postId);   
+    // unzoom
+    setTimeout(() => {
+        $(this).blur();
+    },500)
+    likePost(postId);
 })
 
 // Unlike button event listener
-$('.unlike-post-button').on('click', function() {
-    let postId = $(this).closest('.post-container').attr('id');
-    unlikePost(postId);
+$('.unlike-post-button').on('click', function() { 
+    let postId = $(this).closest('.post-container').attr('id'); 
+    // Unzoom
+    setTimeout(() => {
+        $(this).blur();
+    },500)
+     unlikePost(postId);
 })
 
 // FUNCTIONS
